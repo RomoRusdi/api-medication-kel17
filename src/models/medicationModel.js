@@ -47,4 +47,53 @@ export const MedicationModel = {
     if (error) throw error;
     return { success: true };
   },
+  async searchByName(name) { 
+
+  const { data, error } = await supabase 
+
+    .from("medications") 
+
+    .select("*") 
+
+    .ilike("name", `%${name}%`);   
+
+ 
+
+  if (error) throw error; 
+
+  return data; 
+
+},
+async getPaginated(page, limit) { 
+
+  const from = (page - 1) * limit; 
+
+  const to = from + limit - 1; 
+
+ 
+
+  const { data, error } = await supabase 
+
+    .from("medications") 
+
+    .select("*") 
+
+    .range(from, to); 
+
+ 
+
+  if (error) throw error; 
+
+  return data; 
+
+},
+async getTotalCount() {
+  const { count, error } = await supabase
+    .from("medications")
+    .select("*", { count: "exact", head: true });
+
+  if (error) throw error;
+  return count;
+},
+
 };
